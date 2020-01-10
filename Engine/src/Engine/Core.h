@@ -9,3 +9,5 @@
 #else 
 	#error Engine only supports windows
 #endif // EG_PLATFORM_WINDOWS
+
+#define BIT(x) (1 << x)
