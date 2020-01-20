@@ -13,7 +13,7 @@ namespace Engine
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMove,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMove, MouseScrolled
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 
 	};
 
@@ -42,6 +42,7 @@ namespace Engine
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
+		virtual bool Handled() const { return m_Handled; }
 		
 		inline bool IsInCategory(EventCategory category)
 		{
