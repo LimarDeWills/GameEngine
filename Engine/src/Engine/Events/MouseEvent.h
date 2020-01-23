@@ -54,7 +54,7 @@ namespace Engine {
 	class ENGINE_API MouseButtonEvent : public Event
 	{
 	public:
-		inline int MouseButton() { return m_Button; }
+		inline int GetMouseButton() { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:

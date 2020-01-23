@@ -1,6 +1,7 @@
 workspace "Engine"
    architecture "x64"
-   
+   startproject "Sandbox"
+
    configurations
    {
       "Debug",
@@ -14,16 +15,23 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Engine/vendor/GLFW/include"
 IncludeDir["Glad"] = "Engine/vendor/Glad/include"
+IncludeDir["ImGui"] = "Engine/vendor/ImGui"
 
-include "Engine/vendor/GLFW"
-include "Engine/vendor/Glad"
+group "Dependencies"
+	include "Engine/vendor/GLFW"
+	include "Engine/vendor/Glad"
+	include "Engine/vendor/ImGui"
+group ""
 
 project "Engine"
    location "Engine"
    kind "SharedLib"
    language "C++"
+   staticruntime "off"
+
    targetdir ("bin/" .. outputdir .."/%{prj.name}")
    objdir ("bin-int/" .. outputdir .."/%{prj.name}")
+
    pchheader "egpch.h"
    pchsource "Engine/src/egpch.cpp"
    files
@@ -36,18 +44,19 @@ project "Engine"
       "%{prj.name}/src",
       "%{prj.name}/vendor/spdlog/include",
       "%{IncludeDir.GLFW}",
-	  "%{IncludeDir.Glad}"
+	  "%{IncludeDir.Glad}",
+	  "%{IncludeDir.ImGui}",
    }
    links
    {
       "GLFW",
 	  "Glad",
+	  "ImGui",
       "opengl32.lib"
    }
    filter "system:windows"
    
       cppdialect "C++17"
-      staticruntime "On"
       systemversion "latest"
       defines
       {
@@ -57,28 +66,30 @@ project "Engine"
       }
    postbuildcommands 
    {
-      ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+      --("IF NOT EXISTS ../bin/" .. outputdir .. "/Sandbox mkdir ../bin/" .. outputdir .. "/Sandbox")
+      ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
    }
 
    filter "configurations:Debug"
       defines "EG_DEBUG"
-      buildoptions "/MDd"
+      runtime "Debug"
 	   symbols "On"
 	   
       filter "configurations:Release"
       defines "EG_RELEASE"
-      buildoptions "/MD"
+      runtime "Release"
 	   optimize "On"
 
       filter "configurations:Dist"
       defines "EG_DIST"
-	   buildoptions "/MD"
+	  runtime "Release"
       optimize "On"
        
 project "Sandbox"
    location "Sandbox"
    kind "ConsoleApp"
    language "C++"
+   staticruntime "off"
    
    targetdir ("bin/" .. outputdir .."/%{prj.name}")
    objdir ("bin-int/" .. outputdir .."/%{prj.name}")
@@ -103,7 +114,6 @@ project "Sandbox"
    filter "system:windows"
    
       cppdialect "C++17"
-      staticruntime "On"
       systemversion "latest"
       
       defines
@@ -113,15 +123,15 @@ project "Sandbox"
    
    filter "configurations:Debug"
       defines "EG_DEBUG"
-      buildoptions "/MDd"
+      runtime "Debug"
 	   symbols "On"
 	        
       filter "configurations:Release"
       defines "EG_RELEASE"
-	   buildoptions "/MD"
+	  runtime "Release"
       optimize "On"
       
       filter "configurations:Dist"
       defines "EG_DIST"
-	   buildoptions "/MD"
+	  runtime "Release"
       optimize "On"
