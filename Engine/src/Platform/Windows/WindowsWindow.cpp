@@ -16,14 +16,14 @@ namespace Engine {
 		EG_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProbs& probs)
+	Window* Window::Create(const WindowProps& props)
 	{
-		return new WindowsWindow(probs);
+		return new WindowsWindow(props);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProbs& probs)
+	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
-		Init(probs);
+		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -31,13 +31,13 @@ namespace Engine {
 		Shutdown();
 	}
 
-	void WindowsWindow::Init(const WindowProbs& probs)
+	void WindowsWindow::Init(const WindowProps& props)
 	{
-		m_Data.Title = probs.Title;
-		m_Data.Width = probs.Width;
-		m_Data.Height = probs.Height;
+		m_Data.Title = props.Title;
+		m_Data.Width = props.Width;
+		m_Data.Height = props.Height;
 
-		EG_CORE_INFO("Creating window {0} ({1}, {2})", probs.Title, probs.Width, probs.Height);
+		EG_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
 		if (!s_GLFWInitialized)
 		{
@@ -47,7 +47,7 @@ namespace Engine {
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
-		m_Window = glfwCreateWindow((int)probs.Width, (int)probs.Height, probs.Title.c_str(), nullptr, nullptr);
+		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
 		int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 		EG_CORE_ASSERT(status, "Failed to initialize Glad!");

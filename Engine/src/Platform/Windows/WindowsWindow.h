@@ -9,7 +9,7 @@ namespace Engine {
 	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowProbs& probs);
+		WindowsWindow(const WindowProps& probs);
 		virtual ~WindowsWindow();
 
 		void OnUpdate() override;
@@ -22,8 +22,10 @@ namespace Engine {
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 	private:
-		virtual void Init(const WindowProbs& probs);
+		virtual void Init(const WindowProps& probs);
 		virtual void Shutdown();
+
+		inline virtual void* GetNativeWindow() const { return m_Window; };
 	private:
 		GLFWwindow* m_Window;
 

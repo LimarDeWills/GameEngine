@@ -14,7 +14,7 @@ public:
 
 	void OnEvent(Engine::Event& event) override
 	{
-		//EG_TRACE("{0}", event);
+		EG_TRACE("{0}", event);
 	}
 
 };
